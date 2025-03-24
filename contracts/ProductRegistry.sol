@@ -1,58 +1,64 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-// Importing OpenZeppelin's ReentrancyGuard to prevent reentrancy attacks
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
-contract ProductRegistry is ReentrancyGuard {
+contract SimpleSupplyChain is Ownable, ReentrancyGuard {
     
+    // Define a Product struct
     struct Product {
         uint256 id;
         string name;
+        address currentOwner;
         uint256 price;
-        address owner;
+        bool verified;
     }
 
+    // Store products
     mapping(uint256 => Product) public products;
-    uint256 public productCount;
+    uint256 public nextProductId;
 
-    // Event to emit product registration
-    event ProductRegistered(uint256 id, string name, uint256 price, address owner);
-    
-    // Constructor to initialize the contract
-    constructor() {
-        productCount = 0;
+    event ProductRegistered(uint256 productId, string name, address indexed owner, uint256 price);
+    event ProductTransferred(uint256 productId, address indexed from, address indexed to);
+
+    // Constructor to initialize Ownable and ReentrancyGuard
+    constructor() Ownable(msg.sender) ReentrancyGuard() {}
+
+    // Register a new product (only owner can do this)
+    function registerProduct(string memory name, uint256 price) public onlyOwner {
+        uint256 productId = nextProductId;
+        products[productId] = Product({
+            id: productId,
+            name: name,
+            currentOwner: msg.sender,
+            price: price,
+            verified: false
+        });
+        nextProductId++;
+        
+        emit ProductRegistered(productId, name, msg.sender, price);
     }
 
-    // Function to register a new product
-    function registerProduct(string memory _name, uint256 _price) public nonReentrant {
-        require(bytes(_name).length > 0, "Product name cannot be empty");
-        require(_price > 0, "Product price must be greater than zero");
+    // Transfer ownership of a product (only the current owner can transfer)
+    function transferProduct(uint256 productId, address to) public nonReentrant {
+        require(products[productId].currentOwner == msg.sender, "You are not the owner of this product");
+        require(to != address(0), "Invalid address");
 
-        // Increment the productCount and create a new product
-        productCount++;
-        products[productCount] = Product(productCount, _name, _price, msg.sender);
+        address previousOwner = products[productId].currentOwner;
+        products[productId].currentOwner = to;
 
-        // Emit an event to log the product registration
-        emit ProductRegistered(productCount, _name, _price, msg.sender);
+        emit ProductTransferred(productId, previousOwner, to);
     }
 
-    // Function to update the product's price
-    function updatePrice(uint256 _productId, uint256 _newPrice) public nonReentrant {
-        require(_productId > 0 && _productId <= productCount, "Product does not exist");
-        require(products[_productId].owner == msg.sender, "Only the owner can update the price");
-        require(_newPrice > 0, "Price must be greater than zero");
-
-        // Update the product price
-        products[_productId].price = _newPrice;
+    // Verify the product (owner can verify)
+    function verifyProduct(uint256 productId) public {
+        require(products[productId].currentOwner == msg.sender, "You must be the owner to verify the product");
+        products[productId].verified = true;
     }
 
-    // Function to transfer ownership of a product
-    function transferOwnership(uint256 _productId, address _newOwner) public nonReentrant {
-        require(_productId > 0 && _productId <= productCount, "Product does not exist");
-        require(products[_productId].owner == msg.sender, "Only the owner can transfer ownership");
-
-        // Transfer the ownership
-        products[_productId].owner = _newOwner;
+    // Get product details
+    function getProduct(uint256 productId) public view returns (Product memory) {
+        return products[productId];
     }
 }

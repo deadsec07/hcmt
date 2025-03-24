@@ -1,0 +1,114 @@
+{
+  "accounts": {
+    "account{0}": "0xD10B3a4fb73CfD07C40a46F04eBeF8adc6531602"
+  },
+  "linkReferences": {},
+  "transactions": [
+    {
+      "timestamp": 1742824775712,
+      "record": {
+        "value": "0",
+        "inputs": "(string,uint256)",
+        "parameters": [
+          "Tea Pack 001",
+          "100"
+        ],
+        "name": "registerProduct",
+        "type": "function",
+        "to": "created{undefined}",
+        "from": "account{0}"
+      }
+    },
+    {
+      "timestamp": 1742824826204,
+      "record": {
+        "value": "0",
+        "inputs": "(string,uint256)",
+        "parameters": [
+          "Tea Pack 001",
+          "100"
+        ],
+        "name": "registerProduct",
+        "type": "function",
+        "to": "created{undefined}",
+        "from": "account{0}"
+      }
+    },
+    {
+      "timestamp": 1742824828841,
+      "record": {
+        "value": "0",
+        "inputs": "(string,uint256)",
+        "parameters": [
+          "Tea Pack 001",
+          "100"
+        ],
+        "name": "registerProduct",
+        "type": "function",
+        "to": "created{undefined}",
+        "from": "account{0}"
+      }
+    },
+    {
+      "timestamp": 1742824870619,
+      "record": {
+        "value": "0",
+        "inputs": "(string,uint256)",
+        "parameters": [
+          "Tea Pack 001",
+          "100"
+        ],
+        "name": "registerProduct",
+        "type": "function",
+        "to": "created{undefined}",
+        "from": "account{0}"
+      }
+    },
+    {
+      "timestamp": 1742825080577,
+      "record": {
+        "value": "0",
+        "inputs": "(string,uint256)",
+        "parameters": [
+          "Tea Pack 001",
+          "100"
+        ],
+        "name": "registerProduct",
+        "type": "function",
+        "to": "created{undefined}",
+        "from": "account{0}"
+      }
+    },
+    {
+      "timestamp": 1742825229605,
+      "record": {
+        "value": "0",
+        "inputs": "(string,uint256)",
+        "parameters": [
+          "Tea Pack 001",
+          "100"
+        ],
+        "name": "registerProduct",
+        "type": "function",
+        "to": "created{undefined}",
+        "from": "account{0}"
+      }
+    },
+    {
+      "timestamp": 1742825361364,
+      "record": {
+        "value": "0",
+        "inputs": "(string,uint256)",
+        "parameters": [
+          "Tea Pack 001",
+          "100"
+        ],
+        "name": "registerProduct",
+        "type": "function",
+        "to": "created{undefined}",
+        "from": "account{0}"
+      }
+    }
+  ],
+  "abis": {}
+}
