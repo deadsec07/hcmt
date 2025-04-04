@@ -1,0 +1,25 @@
+# macOS system files
+.DS_Store
+
+# Node.js dependencies (if using Node.js)
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Solidity build artifacts
+artifacts/
+cache/
+
+# Python-related
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# VSCode settings
+.vscode/
+
+# Environment variables and credentials
+.env
+.env.local
+

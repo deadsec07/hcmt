@@ -1,58 +1,104 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.7;
 
-// Importing OpenZeppelin's ReentrancyGuard to prevent reentrancy attacks
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
-contract ProductRegistry is ReentrancyGuard {
-    
+contract SimpleSupplyChain is Ownable, ReentrancyGuard {
+
+    mapping(address => bool) public authorizedVerifiers;
+
     struct Product {
         uint256 id;
         string name;
-        uint256 price;
-        address owner;
+        address currentOwner;
+        bool verified;
     }
 
     mapping(uint256 => Product) public products;
-    uint256 public productCount;
+    uint256 public nextProductId;
 
-    // Event to emit product registration
-    event ProductRegistered(uint256 id, string name, uint256 price, address owner);
-    
-    // Constructor to initialize the contract
-    constructor() {
-        productCount = 0;
+    event ProductRegistered(uint256 productId, string name, address indexed owner);
+    event ProductTransferred(uint256 productId, address indexed from, address indexed to);
+    event ProductVerified(uint256 productId);
+    event VerifierAdded(address indexed verifier);
+    event VerifierRemoved(address indexed verifier);
+
+    constructor() Ownable(msg.sender) {}  // ✅ Fixed Ownable constructor
+
+    modifier onlyVerifier() {
+        require(authorizedVerifiers[msg.sender], "Not authorized to verify products");
+        _;
     }
 
-    // Function to register a new product
-    function registerProduct(string memory _name, uint256 _price) public nonReentrant {
-        require(bytes(_name).length > 0, "Product name cannot be empty");
-        require(_price > 0, "Product price must be greater than zero");
+    function _verifySignature(bytes32 hash, bytes memory signature) internal pure returns (address) {
+    require(signature.length == 65, "Invalid signature length."); // ✅ Signature must be 65 bytes
 
-        // Increment the productCount and create a new product
-        productCount++;
-        products[productCount] = Product(productCount, _name, _price, msg.sender);
+    bytes32 r;
+    bytes32 s;
+    uint8 v;
 
-        // Emit an event to log the product registration
-        emit ProductRegistered(productCount, _name, _price, msg.sender);
+    // ✅ Extract `r`, `s`, `v` from the signature
+    assembly {
+        r := mload(add(signature, 32))
+        s := mload(add(signature, 64))
+        v := byte(0, mload(add(signature, 96)))
     }
 
-    // Function to update the product's price
-    function updatePrice(uint256 _productId, uint256 _newPrice) public nonReentrant {
-        require(_productId > 0 && _productId <= productCount, "Product does not exist");
-        require(products[_productId].owner == msg.sender, "Only the owner can update the price");
-        require(_newPrice > 0, "Price must be greater than zero");
-
-        // Update the product price
-        products[_productId].price = _newPrice;
+    // ✅ Fix `v` value (Ethereum standard requires v = 27 or 28)
+    if (v < 27) {
+        v += 27;
     }
 
-    // Function to transfer ownership of a product
-    function transferOwnership(uint256 _productId, address _newOwner) public nonReentrant {
-        require(_productId > 0 && _productId <= productCount, "Product does not exist");
-        require(products[_productId].owner == msg.sender, "Only the owner can transfer ownership");
+    // ✅ Format the message hash correctly
+    bytes32 ethSignedMessageHash = keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", hash));
 
-        // Transfer the ownership
-        products[_productId].owner = _newOwner;
+    // ✅ Recover and return the signer address
+    return ecrecover(ethSignedMessageHash, v, r, s);
+}
+
+
+    function registerProduct(string memory name, bytes memory signature) public onlyOwner {
+        bytes32 messageHash = keccak256(abi.encodePacked(name, msg.sender));
+        address signer = _verifySignature(messageHash, signature);
+        require(signer == msg.sender, "Invalid signature");
+
+        uint256 productId = nextProductId;
+        products[productId] = Product(productId, name, msg.sender, false);
+        nextProductId++;
+
+        emit ProductRegistered(productId, name, msg.sender);
+    }
+
+    function transferProduct(uint256 productId, address to, bytes memory signature) public nonReentrant {
+        Product storage product = products[productId];
+        require(product.currentOwner == msg.sender, "You are not the owner");
+
+        bytes32 messageHash = keccak256(abi.encodePacked(productId, to, product.currentOwner));
+        address signer = _verifySignature(messageHash, signature);
+        require(signer == product.currentOwner, "Invalid signature");
+
+        product.currentOwner = to;
+        emit ProductTransferred(productId, msg.sender, to);
+    }
+
+    function verifyProduct(uint256 productId) public onlyVerifier {
+        Product storage product = products[productId];
+        require(product.currentOwner != address(0), "Product does not exist");
+        product.verified = true;
+        emit ProductVerified(productId);
+    }
+
+    function addVerifier(address verifier) public onlyOwner {
+        require(verifier != address(0), "Invalid address");
+        require(!authorizedVerifiers[verifier], "Already a verifier");
+        authorizedVerifiers[verifier] = true;
+        emit VerifierAdded(verifier);
+    }
+
+    function removeVerifier(address verifier) public onlyOwner {
+        require(authorizedVerifiers[verifier], "Verifier not found");
+        authorizedVerifiers[verifier] = false;
+        emit VerifierRemoved(verifier);
     }
 }
