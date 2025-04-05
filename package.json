@@ -1,0 +1,29 @@
+{
+  "name": "hcmt",
+  "version": "1.0.0",
+  "scripts": {
+    "compile": "npx hardhat compile",
+    "clean": "npx hardhat clean",
+    "test": "npx hardhat test"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^2.0.2",
+    "@openzeppelin/contracts": "^4.9.3",
+    "@types/chai": "^4.3.5",
+    "@types/mocha": "^10.0.1",
+    "chai": "^4.3.7",
+    "ethers": "^5.7.2",
+    "hardhat": "^2.21.0",
+    "ts-node": "^10.9.1",
+    "typechain": "^8.3.0",
+    "typescript": "^5.0.0"
+  },
+  "main": "hardhat.config.js",
+  "directories": {
+    "test": "tests"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}

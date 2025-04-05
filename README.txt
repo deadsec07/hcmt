@@ -26,3 +26,14 @@ Output from script will appear in remix terminal.
 Please note, require/import is supported in a limited manner for Remix supported modules.
 For now, modules supported by Remix are ethers, web3, swarmgw, chai, multihashes, remix and hardhat only for hardhat.ethers object/plugin.
 For unsupported modules, an error like this will be thrown: '<module_name> module require is not supported by Remix IDE' will be shown.
+
+//
+
+run in local
+
+1. start local server - npx hardhat node 
+2. compile - npx hardhat clean && npx hardhat compile
+3. deploy smart contract - npx hardhat run scripts/deploy.js --network localhost
+4. check if local development server is working - check if the server working -> curl -X POST --data '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}' -H "Content-Type: application/json" http://127.0.0.1:8545
+5. test - npx hardhat test
+6. interact with contract in console - npx hardhat console --network localhost
