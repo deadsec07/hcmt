@@ -23,3 +23,8 @@ __pycache__/
 .env
 .env.local
 
+# Dependency lock files
+package-lock.json
+
+# Logs
+*.log

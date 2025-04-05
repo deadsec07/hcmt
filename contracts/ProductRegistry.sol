@@ -24,7 +24,7 @@ contract SimpleSupplyChain is Ownable, ReentrancyGuard {
     event VerifierAdded(address indexed verifier);
     event VerifierRemoved(address indexed verifier);
 
-    constructor() Ownable(msg.sender) {}  // ✅ Fixed Ownable constructor
+    constructor() Ownable() {}  // ✅ Fixed Ownable constructor
 
     modifier onlyVerifier() {
         require(authorizedVerifiers[msg.sender], "Not authorized to verify products");
