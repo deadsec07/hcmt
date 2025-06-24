@@ -1,3 +1,25 @@
+# HCMT Smart Contract
+
+## Setup
+1. Copy `.env.example` to `.env` and fill in your TESTNET and PROD variables.
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Start a local Hardhat node for local testing:
+   ```bash
+   npx hardhat node
+   ```
+
+## Commands
+- **Compile**: `npm run compile`
+- **Test**: `npm run test`
+- **Deploy locally**: `npm run deploy:local`
+- **Deploy to Testnet**: `npm run deploy:testnet`
+- **Deploy to Production**: `npm run deploy:prod`
+
+//
+
 How to Run Locally
 Start the local server
 Start the Hardhat local blockchain:
@@ -22,3 +44,10 @@ Run tests for your smart contracts:
 Interact with the contract in the Hardhat console
 Open the Hardhat console to interact with the contract:
 	npx hardhat console --network localhost
+
+//
+npx hardhat clean && npx hardhat compile && npx hardhat run scripts/deploy-local.js --network localhost && npx hardhat console --network localhost
+
+AND
+
+npx hardhat node

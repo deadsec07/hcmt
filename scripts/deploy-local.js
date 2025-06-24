@@ -1,15 +1,17 @@
-const hre = require("hardhat");
+const { ethers } = require("hardhat");
 
 async function main() {
-    const SimpleSupplyChain = await hre.ethers.getContractFactory("SimpleSupplyChain");
-    const contract = await SimpleSupplyChain.deploy();
-    await contract.deployed();
+  const [deployer] = await ethers.getSigners();
+  console.log("Deploying locally with account:", deployer.address);
 
-    console.log("Contract deployed at:", contract.address);
+  const Factory = await ethers.getContractFactory("SimpleSupplyChain");
+  const instance = await Factory.deploy();
+  await instance.deployed();
+
+  console.log("Local deploy at:", instance.address);
 }
 
-main().catch((error) => {
-    console.error(error);
-    process.exit(1);
+main().catch(err => {
+  console.error(err);
+  process.exitCode = 1;
 });
-
