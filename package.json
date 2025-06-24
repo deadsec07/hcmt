@@ -2,34 +2,20 @@
   "name": "hcmt",
   "version": "1.0.0",
   "scripts": {
-    "compile": "npx hardhat compile",
-    "clean": "npx hardhat clean",
-    "test": "npx hardhat test"
+    "clean": "hardhat clean",
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "deploy:local": "hardhat run scripts/deploy-local.js --network localhost",
+    "deploy:testnet": "hardhat run scripts/deploy-testnet.js --network skaleTestnet",
+    "deploy:prod": "hardhat run scripts/deploy-prod.js --network skale"
   },
   "devDependencies": {
-    "@nomicfoundation/hardhat-toolbox": "^2.0.2",
-    "@types/chai": "^4.3.5",
-    "@types/mocha": "^10.0.1",
-    "chai": "^4.3.7",
-    "ethers": "^5.8.0",
-    "hardhat": "^2.21.0",
-    "ts-node": "^10.9.1",
-    "typechain": "^8.3.0",
-    "typescript": "^5.0.0"
+    "@nomicfoundation/hardhat-toolbox": "^2.0.0",
+    "hardhat": "^2.21.0"
   },
-  "main": "hardhat.config.js",
-  "directories": {
-    "test": "tests"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "dependencies": {
-    "@nomiclabs/hardhat-ethers": "^2.2.3",
-    "@openzeppelin/contracts": "^4.9.3",
-    "@skalenetwork/ima-js": "^2.0.0",
-    "dotenv": "^16.4.7",
-    "web3": "^4.16.0"
+    "@openzeppelin/contracts": "^4.9.0",
+    "dotenv": "^16.0.0",
+    "ethers": "^5.8.0"
   }
 }
