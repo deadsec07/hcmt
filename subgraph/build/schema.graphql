@@ -1,0 +1,32 @@
+type Product @entity(immutable: true) {
+  id: ID!
+  name: String!
+  currentOwner: Bytes!
+  verified: Boolean!
+  frozen: Boolean!
+  registeredAt: BigInt!
+  transfers: [Transfer!]! @derivedFrom(field: "product")
+  verifications: [Verification!]! @derivedFrom(field: "product")
+  freezeEvents: [FreezeEvent!]! @derivedFrom(field: "product")
+}
+
+type Transfer @entity(immutable: true) {
+  id: ID!
+  product: Product!
+  from: Bytes!
+  to: Bytes!
+  timestamp: BigInt!
+}
+
+type Verification @entity(immutable: true) {
+  id: ID!
+  product: Product!
+  timestamp: BigInt!
+}
+
+type FreezeEvent @entity(immutable: true) {
+  id: ID!
+  product: Product!
+  isFrozen: Boolean!
+  timestamp: BigInt!
+}

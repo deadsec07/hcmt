@@ -10,6 +10,7 @@
     "deploy:prod": "hardhat run scripts/deploy-prod.js --network skale"
   },
   "devDependencies": {
+    "@graphprotocol/graph-cli": "^0.97.1",
     "@nomicfoundation/hardhat-toolbox": "^2.0.0",
     "hardhat": "^2.21.0"
   },

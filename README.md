@@ -51,3 +51,44 @@ npx hardhat clean && npx hardhat compile && npx hardhat run scripts/deploy-local
 AND
 
 npx hardhat node
+
+//
+
+hcmt/                         ← project root
+├── contracts/                
+│   └── SimpleSupplyChain.sol  ← on-chain contract
+├── scripts/
+│   ├── deploy-local.js
+│   ├── deploy-testnet.js
+│   └── deploy-prod.js
+├── test/
+│   └── SimpleSupplyChain.test.js
+├── backend/
+│   ├── package.json
+│   ├── .env.example
+│   ├── src/
+│   │   ├── index.js           ← Express / Lambda entry
+│   │   ├── auth.js            ← subscription & role‐grant logic
+│   │   ├── relay.js           ← gas-less transaction relay
+│   │   └── config.js
+│   └── test/
+│       └── backend.test.js    ← integration tests
+├── frontend/
+│   ├── package.json
+│   ├── src/
+│   │   ├── App.jsx            ← main React UI
+│   │   ├── components/        ← shadcn/ui & Tailwind components
+│   │   ├── hooks/             ← Ethers.js hooks
+│   │   └── utils/
+│   │       └── api.js         ← REST + on-chain helpers
+│   └── public/
+│       └── index.html
+├── subgraph/
+│   ├── subgraph.yaml
+│   └── mappings/
+│       └── mapping.ts
+├── hardhat.config.js
+├── package.json               ← for contract & scripts
+├── .env.example               ← SKALE & backend keys
+└── README.md
+

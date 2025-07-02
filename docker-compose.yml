@@ -1,0 +1,39 @@
+version: '3.0'
+
+services:
+  # 1) IPFS
+  ipfs:
+    image: ipfs/go-ipfs:v0.18.1
+    ports:
+      - "5001:5001"
+      - "8080:8080"
+
+  # 2) PostgreSQL
+  postgres:
+    image: postgres:12
+    restart: always
+    environment:
+      POSTGRES_USER: graph
+      POSTGRES_PASSWORD: graph
+      POSTGRES_DB: graph
+    ports:
+      - "5432:5432"
+
+  # 3) Graph Node
+  graph-node:
+    image: graphprotocol/graph-node:v0.28.1
+    depends_on:
+      - ipfs
+      - postgres
+    ports:
+      - "8000:8000"   # GraphQL endpoint
+      - "8020:8020"   # Admin/management endpoint (for deploy)
+      - "3030:3030"   # Prometheus metrics (optional)
+    command:
+      - "graph-node"
+      - "--postgres-url"
+      - "postgresql://graph:graph@postgres:5432/graph?sslmode=prefer"
+      - "--ipfs"
+      - "ipfs:5001"
+      - "--ethereum-rpc"
+      - "local:http://host.docker.internal:8545"
